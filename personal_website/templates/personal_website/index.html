@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+  </head>
+  <body>
+
+		{% if repos %}
+  
+				<ul>
+          <H1> List of Repos </H1>
+				{% for r_name in repos %}
+						<li>{{ r_name }}</li>
+				{% endfor %}
+				</ul>
+		{% else %}
+				<p>No repos found.</p>
+		{% endif %}
+
+  </body>
+</html>
+

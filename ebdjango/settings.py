@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'django-env.hmkiakhm4j.eu-west-1.elasticbeanstalk.
 # Application definition
 
 INSTALLED_APPS = [
+    'personal_website',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
