@@ -3,13 +3,13 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 from django.template import loader
+from github import Github
 
 def index(request):
         return HttpResponse("Hello, World!")
 
-GITHUB_TOKEN = "TOKENHERE"
+GITHUB_TOKEN = "key"
 def github(request):
-        from github import Github
         g = Github("paulmolloy", GITHUB_TOKEN)
         repos = [];
         for repo in g.get_user().get_repos():
@@ -22,4 +22,13 @@ def github(request):
         return HttpResponse(template.render(context, request))
     
         #return HttpResponse("Github stuff" + ' '.join(repos))
+def visualisation(request):
+        vals = [1,3,5,70];
+            
+        template = loader.get_template('personal_website/visualisation.html')
+        context = {
+                'vals': vals
+                }
+        return HttpResponse(template.render(context, request))
+    
     
