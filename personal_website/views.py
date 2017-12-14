@@ -14,11 +14,13 @@ def github(request):
         #repos = [];
         #for repo in g.get_user().get_repos():
         #    repos.append(repo.name)
-        repos = list_org_repos('Google')    
+        repos = query_github('Google')    
         template = loader.get_template('personal_website/index.html')
+
         context = {
                 'repos': repos
                 }
+        
         return HttpResponse(template.render(context, request))
     
         #return HttpResponse("Github stuff" + ' '.join(repos))
@@ -31,12 +33,21 @@ def visualisation(request):
                 }
         return HttpResponse(template.render(context, request))
     
-
-
-def list_org_repos(name):
-    repos = [];
+def query_github(name):
     g = Github('paulmolloy', GITHUB_TOKEN)
-    print ("got token")
+    org = g.get_organization(name)
+    repos = []
+    for repo in org.get_repos():
+        repos.append(repo.name)
+    if(len(repos)==0):
+        return []
+    repo = org.get_repo(repos[0])
+          
+    
+    return [repo.size] 
+
+def list_org_repos(g, name):
+    repos = [];
     org = g.get_organization(name)
     print ("got org")
     for repo in org.get_repos():
