@@ -18,6 +18,19 @@
 				<p>No repos found.</p>
 		{% endif %}
 
+		{% if commits %}
+  
+				<ul>
+          <H1> List of Commits </H1>
+				{% for c in commits %}
+						<li>{{ c }}</li>
+				{% endfor %}
+				</ul>
+		{% else %}
+				<p>No commits found.</p>
+		{% endif %}
+
+
   </body>
 </html>
 
