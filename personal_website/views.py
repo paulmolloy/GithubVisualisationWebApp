@@ -4,26 +4,24 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from github import Github
+from personal_website.models import Organization, Repository, Commit
 
 def index(request):
         return HttpResponse("Hello, World!")
 
 GITHUB_TOKEN = "70c438ead2254788400a09559d93855961e3a80e"
 def github(request):
-        #g = Github("paulmolloy", GITHUB_TOKEN)
-        #repos = [];
-        #for repo in g.get_user().get_repos():
-        #    repos.append(repo.name)
-        repos = query_github('Google')    
         template = loader.get_template('personal_website/index.html')
-
+        org = 'Google'
+        query_github(org)
+        org_id = Organization.objects.filter(organization_name = org)[0]
+        repos = Repository.objects.filter(organization = org_id).values_list('repo_name', flat=True).order_by('id')
         context = {
                 'repos': repos
                 }
         
         return HttpResponse(template.render(context, request))
     
-        #return HttpResponse("Github stuff" + ' '.join(repos))
 def visualisation(request):
         vals = [1,3,5,70];
             
@@ -32,19 +30,28 @@ def visualisation(request):
                 'vals': vals
                 }
         return HttpResponse(template.render(context, request))
-    
+   
+
 def query_github(name):
     g = Github('paulmolloy', GITHUB_TOKEN)
     org = g.get_organization(name)
+    if(len(Organization.objects.filter(organization_name=name))>0):
+        return
+
+    Organization(organization_name=name).save()
     repos = []
+    org_id = Organization.objects.filter(organization_name=name)[0]
     for repo in org.get_repos():
         repos.append(repo.name)
+        if(len(Repository.objects.filter(repo_name=repo.name, organization = org_id))==0):
+            Repository(repo_name= repo.name, organization = org_id).save()
+    
     if(len(repos)==0):
-        return []
+        return 
     repo = org.get_repo(repos[0])
           
     
-    return [repo.size] 
+    return  
 
 def list_org_repos(g, name):
     repos = [];
@@ -54,4 +61,4 @@ def list_org_repos(g, name):
         print ('appending' + repo.name)
         repos.append(repo.name)
 
-    return repos
+    return
