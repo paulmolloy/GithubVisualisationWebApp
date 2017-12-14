@@ -25,6 +25,14 @@ class Commit(models.Model):
     repo = models.ForeignKey(Repository)
     organization = models.ForeignKey(Organization)
 
+class AverageCommitSize(models.Model):
+    repo = models.ForeignKey(Repository)
+    organization = models.ForeignKey(Organization)
+    average_total = models.IntegerField()
+    average_deleted = models.IntegerField()
+    average_added = models.IntegerField()
 
+
+    
 
 

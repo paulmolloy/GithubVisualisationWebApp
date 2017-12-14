@@ -6,6 +6,11 @@ from django.template import loader
 from github import Github
 from personal_website.models import Organization, Repository, Commit
 from datetime import timedelta, date, time, datetime as dt
+from django.db import connections
+from django.db.models import Count
+from django.http import JsonResponse
+from django.shortcuts import render
+
 
 def index(request):
         return HttpResponse("Hello, World!")
@@ -80,3 +85,15 @@ def list_org_repos(g, name):
         repos.append(repo.name)
 
     return
+
+def graph(request):
+        return render(request, 'personal_website/graph.html')
+
+def commit_count_google_ubp(request):
+    name = 'Google'
+    repo_name = 'google/upb'
+    org_id = Organization.objects.filter(organization_name=name)[0]
+    repo_id = Repository.objects.filter(organization = org_id)[0]
+    data = Commit.objects.filter(repo= repo_id).values('author_name').annotate(count_items=Count('id'))
+
+    return JsonResponse(list(data), safe=False)
