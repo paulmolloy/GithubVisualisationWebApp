@@ -7,6 +7,12 @@
 <!-- Coding style based on http://gist.github.com/mbostock/5977197 -->
 
 <style>
+	@font-face {
+    font-family: 'abc';
+		{% load staticfiles %}
+    src: url('{% static "fonts/Archivo-Regular.ttf" %}');
+    src: local('{% static "fonts/Archivo-Regular.ttf" %}');
+  }
 body {
   font: 11px sans-serif;
 }
@@ -31,7 +37,7 @@ body {
 </style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-
+<h1> Number of Stars, Number of Open Issues per Repository Owned by Google </h1>
 <script>
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,

@@ -4,6 +4,13 @@
 <head>
 	<style>
 
+  @font-face {
+    font-family: 'Archivo';
+    {% load staticfiles %}
+    src: url('{% static "fonts/Archivo-Regular.ttf" %}');
+    src: local('{% static "fonts/Archivo-Regular.ttf" %}');
+  }
+
   .bar{
     fill: steelblue;
   }
