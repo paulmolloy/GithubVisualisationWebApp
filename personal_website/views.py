@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from github import Github
+from github import GithubException
 from personal_website.models import Organization, Repository, Commit
 from datetime import timedelta, date, time, datetime as dt
 from django.db import connections
@@ -49,30 +50,33 @@ def query_github(name):
 
     repos = []
     org_id = Organization.objects.filter(organization_name=name)[0]
-    #for repo in org.get_repos():
-    repo = org.get_repos()[0]
-    if(len(Repository.objects.filter(repo_name=repo.name, organization = org_id))==0):
-        repos.append(repo.name)
-        Repository(repo_name= repo.name, organization = org_id, open_issues_count = repo.open_issues_count, size = repo.size,
-            num_stars = repo.stargazers_count).save()
-        repo_id = Repository.objects.filter(repo_name = repo.name, organization = org_id)[0]
-        num_days = 365
-        query_commits(repo, org_id, repo_id, num_days);
-    
+    for repo in org.get_repos():
+        if(len(Repository.objects.filter(repo_name=repo.name, organization = org_id))==0):
+            print 'getting repo' + repo.name
+            repos.append(repo.name)
+            Repository(repo_name= repo.name, organization = org_id, open_issues_count = repo.open_issues_count, size = repo.size,
+                    num_stars = repo.stargazers_count).save()
+            repo_id = Repository.objects.filter(repo_name = repo.name, organization = org_id)[0]
+            num_days = 365
+            query_commits(repo, org_id, repo_id, num_days);
+        else:
+            print 'skipping ' + repo.name
     return  
 
 def query_commits(repo, org_id, repo_id, num_days):
     td = timedelta(days = num_days)
     since_time = dt.now() - td
-    commits = repo.get_commits(since = since_time)
-    for commit in commits:
-        print commit.commit.committer.name
-        if(len(Commit.objects.filter(repo=repo_id, organization = org_id, url=commit.commit.url))==0):
+    try:
+        commits = repo.get_commits(since = since_time)
+        for commit in commits:
+            print commit.commit.committer.name
+            #if(len(Commit.objects.filter(repo=repo_id, organization = org_id, url=commit.commit.url))==0):
             print 'adding'
-            Commit(url = commit.commit.url, author_name = commit.commit.committer.name, message = commit.commit.message,
-                    num_files = len(commit.files), additions = commit.stats.additions, deletions = commit.stats.deletions,
-                    total_change = commit.stats.total, repo=repo_id, organization = org_id).save() 
-        
+            Commit(url = commit.commit.url, author_name = commit.commit.committer.name, message = commit.commit.message, 
+            num_files = len(commit.files), additions = commit.stats.additions, deletions = commit.stats.deletions, 
+            total_change = commit.stats.total, repo=repo_id, organization = org_id).save() 
+    except GithubException as e:
+        print(e.args[1]['message'])
     
 
 
