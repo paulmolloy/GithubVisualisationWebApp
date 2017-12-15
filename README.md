@@ -10,5 +10,9 @@ A Django webserver visualising github data.
 
 ### JSON API Example. ###
   ![screenCapture](screenshots/google_repos_api_6pm.png)
+  
+### JSON API Example: Individual Repository ###
+  ![screenCapture](screenshots/google_contributors_api_6pm.png)
+
 
 
