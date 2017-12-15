@@ -96,10 +96,19 @@ def graph(request):
 def repositories_graph(request):
         return render(request, 'personal_website/repos_graph.html')
 
+def commit_count_google(request, repo_name=None):
+    name = 'Google'
+    #repo_name = 'truth'
+    org_id = Organization.objects.filter(organization_name=name)[0]
+    repo_id = Repository.objects.filter(organization = org_id, repo_name = repo_name)[0]
+    data = Commit.objects.filter(repo= repo_id).values('author_name').annotate(count_items=Count('id'))
 
+    return JsonResponse(list(data), safe=False)
+
+ 
 def commit_count_google_ubp(request):
     name = 'Google'
-    repo_name = 'google/upb'
+    #repo_name = 'upb'
     org_id = Organization.objects.filter(organization_name=name)[0]
     repo_id = Repository.objects.filter(organization = org_id)[0]
     data = Commit.objects.filter(repo= repo_id).values('author_name').annotate(count_items=Count('id'))
