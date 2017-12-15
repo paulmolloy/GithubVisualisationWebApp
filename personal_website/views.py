@@ -89,6 +89,10 @@ def list_org_repos(g, name):
 def graph(request):
         return render(request, 'personal_website/graph.html')
 
+def repositories_graph(request):
+        return render(request, 'personal_website/repos_graph.html')
+
+
 def commit_count_google_ubp(request):
     name = 'Google'
     repo_name = 'google/upb'
@@ -97,3 +101,12 @@ def commit_count_google_ubp(request):
     data = Commit.objects.filter(repo= repo_id).values('author_name').annotate(count_items=Count('id'))
 
     return JsonResponse(list(data), safe=False)
+
+
+def repos_issues_stars_size(request):
+    name = 'Google'
+    org_id = Organization.objects.filter(organization_name=name)[0]
+    #for repo in org.get_repos():
+    repo_data = Repository.objects.filter(organization=org_id).values('open_issues_count', 'size', 'num_stars')
+
+    return JsonResponse(list(repo_data), safe=False)
