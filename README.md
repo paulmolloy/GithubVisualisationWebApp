@@ -1,5 +1,5 @@
 # Github Visualisation Web-app #
-A Django webserver visualising github data.
+A Django webserver visualising github data. The program gets and stores data from all repositories and all commits in the google github organization and creates graphs based on this data;
 ### Visualizing number of open issues and number of stars for all of the public repositories by google ###
   ![screenCapture](screenshots/google_repos_6pm.png)
 
