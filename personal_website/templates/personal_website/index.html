@@ -6,7 +6,15 @@
   </head>
   <body>
 
-		{% if repos %}
+
+    <h1> Github Visualization </h1>
+     <form action="/repositories_graph">
+        <input type="submit" value="All Google Repositories Graph" />
+    </form>
+    <form action="/graph">
+        <input type="submit" value="Graph for an Individual Repository" />
+    </form>
+    {% if repos %}
   
 				<ul>
           <H1> List of Repos </H1>
@@ -18,17 +26,6 @@
 				<p>No repos found.</p>
 		{% endif %}
 
-		{% if commits %}
-  
-				<ul>
-          <H1> List of Commits </H1>
-				{% for c in commits %}
-						<li>{{ c }}</li>
-				{% endfor %}
-				</ul>
-		{% else %}
-				<p>No commits found.</p>
-		{% endif %}
 
 
   </body>
