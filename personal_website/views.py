@@ -98,11 +98,13 @@ def repositories_graph(request):
 
 def commit_count_google(request, repo_name=None):
     name = 'Google'
-    #repo_name = 'truth'
+    repo_name = 'paco'
     org_id = Organization.objects.filter(organization_name=name)[0]
     repo_id = Repository.objects.filter(organization = org_id, repo_name = repo_name)[0]
     data = Commit.objects.filter(repo= repo_id).values('author_name').annotate(count_items=Count('id'))
 
+    print 'repo_id' + repo_name
+    print  list(data)
     return JsonResponse(list(data), safe=False)
 
  
