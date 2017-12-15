@@ -107,6 +107,6 @@ def repos_issues_stars_size(request):
     name = 'Google'
     org_id = Organization.objects.filter(organization_name=name)[0]
     #for repo in org.get_repos():
-    repo_data = Repository.objects.filter(organization=org_id).values('open_issues_count', 'size', 'num_stars')
+    repo_data = Repository.objects.filter(organization=org_id).values('repo_name', 'open_issues_count', 'size', 'num_stars')
 
     return JsonResponse(list(repo_data), safe=False)
